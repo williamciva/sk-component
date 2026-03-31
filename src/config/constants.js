@@ -1,5 +1,6 @@
 export const APP_BASE_PATH = 'apps';
 export const SERVICE_BASE_PATH = 'services';
+export const RESOURCE_BASE_PATH = 'resources';
 export const TEMPLATE_PATH = 'templates';
 export const BUILD_PATH = 'build';
 export const JSP_NAME = 'index.jsp'

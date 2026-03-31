@@ -5,7 +5,7 @@ import { APP_BASE_PATH, BUILD_PATH, JSP_NAME, MESSAGES } from "../config/constan
 import { getAppHtmlContent, scanAppFiles, scanServices } from '../utils/fileScanner.js';
 import { toPascalCase } from '../utils/stringUtils.js';
 import { generateFromTemplate } from "../utils/templateEngine.js";
-import { addAppToArchive, zipFiles } from '../utils/zipUtil.js'
+import { addAppToArchive, addCommonsToArchive, zipFiles } from '../utils/zipUtil.js'
 import { buildScipts, buildSciptsServices, buildStyles } from '../utils/htmlUtils.js';
 
 
@@ -93,6 +93,7 @@ export const buildApp = async (
         if (output) {
             const archive = await zipFiles(output, async (archive) => {
                 addAppToArchive(archive, appName, jspFile)
+                addCommonsToArchive(archive)
             });
 
             const pointer = archive.pointer()

@@ -1,25 +1,39 @@
 import archiver from 'archiver';
-import { createWriteStream } from 'fs';
+import fs from 'fs';
 import path from 'path';
-import { APP_BASE_PATH, SERVICE_BASE_PATH } from '../config/constants.js';
+import { APP_BASE_PATH, RESOURCE_BASE_PATH, SERVICE_BASE_PATH } from '../config/constants.js';
 
 
 export const addAppToArchive = (archive, appName, jspFile) => {
     const appPath = path.join(process.cwd(), APP_BASE_PATH, appName);
-    const servicePath = path.join(process.cwd(), SERVICE_BASE_PATH);
 
     archive.append(null, { name: `${appName}/` });
-    archive.append(null, { name: `${SERVICE_BASE_PATH}/` });
 
     archive.directory(appPath, appName);
-    archive.directory(servicePath, SERVICE_BASE_PATH);
 
     archive.file(jspFile, { name: `${appName}/index.jsp` });
 }
 
 
+export const addCommonsToArchive = (archive) => {
+    const servicePath = path.join(process.cwd(), SERVICE_BASE_PATH);
+    const resourcePath = path.join(process.cwd(), RESOURCE_BASE_PATH);
+
+    archive.append(null, { name: `${SERVICE_BASE_PATH}/` });
+    archive.append(null, { name: `${RESOURCE_BASE_PATH}/` });
+
+    archive.directory(servicePath, SERVICE_BASE_PATH);
+    archive.directory(resourcePath, RESOURCE_BASE_PATH);
+}
+
+
 export const zipFiles = async (zipOutput, fun) => {
-    const output = createWriteStream(zipOutput);
+    const dir = path.dirname(zipOutput);
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+
+    const output = fs.createWriteStream(zipOutput);
 
     const archive = archiver('zip', {
         zlib: { level: 9 },
